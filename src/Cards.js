@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import data from './data.js';
 
 import { Row, Col } from 'react-bootstrap';
 
-function Cards(props) {
+function Cards() {
 
-  const shoes = props.shoesData;
+  const [shoes, setShoes] = useState(data);
+
+  function getNewShoes() {
+    axios.get('https://codingapple1.github.io/shop/data2.json')
+    .then((data) => {
+      let dumpArray = [...shoes, ...data.data];
+      setShoes(dumpArray);
+    });
+
+    /*
+    fetch(url)
+    .then(결과 => json, array변환)
+    .then(() => {});
+    */
+  }
 
   return (
     <>
@@ -21,6 +37,7 @@ function Cards(props) {
           })
         }
       </Row>
+      <button onClick={() => { getNewShoes() }}>버튼</button>
     </>
   )
 }
@@ -28,12 +45,13 @@ function Cards(props) {
 function Card(props) {
   return (
     <Col key={ props.id }>
-      <img src={process.env.PUBLIC_URL + props.src } alt={ `shoe${ props.id }`} width="80%"/>
       <h4>{ props.title }</h4>
       <p>{ props.content }</p>
       <p>{ props.price }</p>
     </Col>
   )
 }
+
+
 
 export default Cards;
